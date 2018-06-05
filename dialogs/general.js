@@ -5,9 +5,9 @@ var request = require('request');
 //create intent recognizer based on LUIS model
 //var luisModel = "";
 
-const luisAppId = '4e100b7d-8cc1-4fe6-b645-af2be8664089';
-const luisAPIKey = '0f08553c4d114066aad27bb448da285d';
-const serviceEndpoint = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/';
+const luisAppId = process.env.LUIS_MODEL_URL;
+const luisAPIKey = process.env.LUIS_APP_ID;
+const serviceEndpoint = process.env.LUIS_API_KEY;
 
 // Default is westus
 const luisModel = serviceEndpoint + luisAppId + '?subscription-key=' + luisAPIKey;
