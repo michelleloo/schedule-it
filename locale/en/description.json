@@ -1,5 +1,5 @@
 {
-    "ask_description": "Please describe details of the event",
+    "ask_description": "Please describe details of the event (ex: Dinner with mom at Kinkaku)",
     "replay_description": "Here is what I have: ",
     "confirm_description": "Is this correct?"
 }

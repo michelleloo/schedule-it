@@ -1,4 +1,6 @@
 {
     "get_started": "Welcome to the schedule-it, what is your name?",
-    "default_address_prompt": "Where is the Event?"
+    "default_address_prompt": "Where is the event?",
+    "summary":"Start Date: %s <br/> End Date: %s <br/> Address of event: %s <br/> Attendees: %s <br/> What you need to bring: %s"
+
 }

@@ -5,11 +5,11 @@ var lib = new builder.Library('contact');
 // Recipient & Sender details
 lib.dialog('/', [
     function (session) {
-        session.send('start_info')
         builder.Prompts.text(session, 'ask_first_name');
     },
     function (session, args) {
         session.dialogData.recipientFirstName = args.response;
+        
         builder.Prompts.text(session, 'ask_last_name');
     },
     function (session, args) {

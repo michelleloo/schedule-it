@@ -1,4 +1,5 @@
 {
     "ask_who": "Who is the event with?",
-    "ask_bring":"Do you need to bring anything to the event?"
+    "ask_bring":"Do you need to bring anything to the event?",
+    "ask_bring2":"Please list what you need to bring"
 }

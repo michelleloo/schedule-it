@@ -24,9 +24,6 @@ lib.dialog('/',[
         }
     }
 ])
-
-
-
 // Export createLibrary() function
 module.exports.createLibrary = function () {
     return lib.clone();

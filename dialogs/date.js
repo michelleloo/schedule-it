@@ -10,7 +10,12 @@ var eveningHours = ['5','6','7','8','9','10'];
 
 lib.dialog('/', [
     function (session) {
-       builder.Prompts.time(session, 'ask_date');
+      if(session.conversationData.startDate){
+        builder.Prompts.time(session, 'ask_end_date');
+      }
+      else{
+        builder.Prompts.time(session, 'ask_date');
+      }
     },
     function (session, args) {
         if (args.response) {
@@ -20,13 +25,21 @@ lib.dialog('/', [
             var userHours = formatHours(d);
             switch (userHours){
                 case "0":
-                  builder.Prompts.time(session, 'ask_time');
+                  if(session.conversationData.startDate){
+                    builder.Prompts.time(session, 'ask_end_time');
+                  }
+                  else{
+                    builder.Prompts.time(session, 'ask_time')};
                 break;
                 case "6":
                   builder.Prompts.time(session, 'ask_morning');
                   break;
                 case "12":
-                  builder.Prompts.time(session, 'ask_time');
+                  if(session.conversationData.startDate){
+                    builder.Prompts.time(session, 'ask_end_time');
+                  }
+                  else{
+                    builder.Prompts.time(session, 'ask_time')};                  
                   break;
                 case  "15":
                   builder.Prompts.time(session,'ask_afternoon'); 
@@ -62,7 +75,11 @@ function(session,args){
     var t = session.dialogData.time;
     var d = session.dialogData.date;
     session.dialogData.timeString = formatAMPM(t);
-    session.send("The event will occur on %s?", session.dialogData.dateString + " at "+ session.dialogData.timeString);
+    if(session.conversationData.startDate){
+    session.send("The event will end on %s?", session.dialogData.dateString + " at "+ session.dialogData.timeString);
+    }
+    else{
+    session.send("The event will start on %s?", session.dialogData.dateString + " at "+ session.dialogData.timeString);}
     builder.Prompts.confirm(session, "Is this the correct date and time?");
   }
 },

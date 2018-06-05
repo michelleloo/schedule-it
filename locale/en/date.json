@@ -1,9 +1,11 @@
 {
-    "ask_date": "When is the event?",
+    "ask_date": "When will the event start? (Please enter a date and time!)",
+    "ask_end_date": "When will the event end?",
     "confirm_date":"Is this the correct date and time?",
     "ask_time": "Please enter the time that the event will occured",
     "confirm_time": "Is this the correct time?",
-    "ask_time":"What time will the event occur?",
+    "ask_time":"What time will the event start at?",
+    "ask_end_time":"What time will the event end at?",
     "ask_morning":"What time in the morning?",
     "ask_afternoon": "What time in the afternoon?",
     "ask_evening": "What time in the evening?"
