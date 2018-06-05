@@ -1,0 +1,14 @@
+{
+    "start_info": "Perfect, thanks %s! The event has been added to your calendar",
+    "ask_info": "The last thing I need is your contact information",
+    "ask_first_name": "What is your first name?",
+    "ask_last_name": "What is your last name?",
+    "ask_recipient_phone_number": "What is your phone number?",
+    "invalid_phone_number": "Oops, that doesn't look like a valid number. Try again.",
+    "ask_time": "When would it be the best time to contact you?",
+    "yes": "Yes",
+    "edit": "Edit",
+    "ask_email": "What's your email?",
+    "invalid_email": "Something is wrong with that email address. Please try again.",
+    "invalid_note": "The frame is invalid, please enter again"
+}
