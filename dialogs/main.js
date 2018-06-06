@@ -5,12 +5,8 @@ var sprintf = require('sprintf-js').sprintf,
 
 lib.dialog('/',[
     function (session) {
-          builder.Prompts.text(session, 'get_started');
-    },
-    function (session,args) {
-      session.conversationData.recipientFirstName = args.response;
-      // Ask for date details using 'date' library
-      session.beginDialog('date:/')
+        session.send("Okay %s, Lets get you started on scheduling your event!", session.userData.Name)
+        session.beginDialog('date:/')
     },
     function(session,args){
 		//Retrive date/time of the event
@@ -27,24 +23,22 @@ lib.dialog('/',[
     },
     function(session,args){
         session.conversationData.eventAddress = args.address;
-        //Get the driver details
         session.beginDialog('description:/')
     },
     function(session,args){
         session.conversationData.eventDescription = args.descriptionDetails;
-        //Get extract company details
         session.beginDialog('company:/')
     },
     function(session,args){
         session.conversationData.companyDetails = args.companyDetails;
-        //Get extract contact details
         session.beginDialog('contact:/')
     },
     function(session,args){
       session.conversationData.contactDetails = args.contactDetails;
+      session.send("Hi %s! Here are the final details of your event and they have been added to your total events!", session.userData.Name)
       var titleDescription = session.conversationData.eventDescription
-      var contentDetails = [session.conversationData.startDate,session.conversationData.endDate, session.conversationData.eventAddress,session.conversationData.companyDetails.company]
-      var contentString = "<b>Start Date:</b>%s <br/> <b>End Date:</b> %s<br/> <b>Address of event: </b>%s <br/> <b>Attendees:</b> %s"
+      var contentDetails = [session.conversationData.startDate,session.conversationData.endDate, session.conversationData.eventAddress,session.conversationData.companyDetails.company,session.conversationData.companyDetails.bring]
+      var contentString = "<b>Start Date:</b> %s <br/> <b>End Date:</b> %s<br/> <b>Address of event: </b>%s <br/> <b>Attendees:</b> %s <br/><b>Names of Attendees:</b> %s"
       var endDetails = vsprintf(contentString,contentDetails)
 
       var eventCard = new builder.HeroCard(session)
@@ -70,49 +64,6 @@ function createCard(session){
     .text('summary', session.conversationData.startDate,session.conversationData.endDate, session.conversationData.eventAddress,session.conversationData.companyDetails.company,session.conversationData.companyDetails.askBring);
     return eventCard
 
-}
-
-//Date, Address, Company, Details, Email, Phone number
-function sendEmail(session, userEmail, agentEmail){
-    var subjectMessage = createSubject(session)
-    var emailMessage = createMessage(session);
-    var recipients = [userEmail,agentEmail]
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true, // secure:true for port 465, secure:false for port 587
-        auth: {
-            user: 'thecoop38@gmail.com',
-            pass: 'thecoop38__'
-        }
-    });
-
-    // setup email data with unicode symbols
-    let mailOptions = {
-        from: '"Event Bot" <thecoop38@gmail.com>', // sender address
-        to: recipients, // list of receivers
-        subject: subjectMessage, // Subject line
-        //text:  emailMessage, // plain text body
-        html: emailMessage // html body
-    };
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message %s sent: %s', info.messageId, info.response);
-    });
-}
-function createMessage(session){
-    var aboutdetails = [session.conversationData.generalDetails.query,session.conversationData.policyDetails,session.conversationData.dateDetails,session.conversationData.incidentAddress,session.conversationData.driverDetails.driver,session.conversationData.driverDetails.injury,session.conversationData.damageDetails,session.conversationData.firstname,session.conversationData.contactDetails.lastName,session.conversationData.phoneNumber,session.conversationData.email,session.conversationData.contactDetails.bestTime]
-    return vsprintf("<b>Describe the incident:</b><br/>%s<br/><b>About the claim:</b> <br/> Policy Number: %s <br/> Time of the Incident: %s <br/> Location of the Incident: %s <br/> <b>Claim Details:</b>  <br/> Person driving where accident occured: %s <br/> Injuries Involved: %s <br/> Damage to the vehicle: %s <br/> <b>Contact Details:</b> <br/> Name: %s %s <br/> Phone number: %s <br/> Email: %s <br/> Best time to contact: %s ", aboutdetails);
-}
-
-
-function createSubject(session){
-    var c = [session.conversationData.firstname]
-    return vsprintf("Hi %s! Here are the details of your event", c);
 }
 
 // Export createLibrary() function

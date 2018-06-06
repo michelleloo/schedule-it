@@ -7,11 +7,21 @@ lib.dialog('/',[
         builder.Prompts.choice(session, 'ask_who', list_company,{listStyle: builder.ListStyle.auto});
     },
     function(session,args){
-        session.dialogData.company = args.response.entity;
-        builder.Prompts.choice(session, 'ask_bring',"Yes|No",{listStyle: builder.ListStyle.button});
+        if(args.response.entity == "Myself"){
+            session.dialogData.company = "Myself";
+            var companyDetails = {
+                company: session.dialogData.company,
+                bring: session.userData.Name
+            };
+            session.endDialogWithResult({companyDetails: companyDetails});
+        }
+        else{
+            session.dialogData.company = args.response.entity;
+            builder.Prompts.text(session, 'ask_names');
+        }
     },
     function(session,args){
-        session.dialogData.askBring = args.response.entity;
+        session.dialogData.askBring = args.response;
         var companyDetails = {
             company: session.dialogData.company,
             bring: session.dialogData.askBring
