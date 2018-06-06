@@ -17,20 +17,11 @@ var connector = new builder.ChatConnector({
 
 var bot = new builder.UniversalBot(connector);
 
-// var bot = new builder.UniversalBot(connector, function (session) {
-//     session.beginDialog('main:/');
-// },
-//     function(session,args){
-//        	events.push(args.eventCard);
-//        	session.send("Hii buttface")
-//   session.send(new builder.Message(session)
-//     .addAttachment(args.eventCard));
-//     });
-// // Set default locale
-// bot.set('localizerSettings', {
-//     botLocalePath: './locale',
-//     defaultLocale: 'en'
-// });
+// Set default locale
+bot.set('localizerSettings', {
+    botLocalePath: './locale',
+    defaultLocale: 'en'
+});
 
 const intents = new builder.IntentDialog({
     recognizers: [
@@ -51,12 +42,52 @@ bot.dialog('BookEvent',[
         session.beginDialog('main:/');
     },
     function(session,args){
-		events.push(args.eventCard);
-		session.send(new builder.Message(session)
-    		.addAttachment(args.eventCard));
+    	if(session.userData.eventsTitle){
+    		session.userData.eventsTitle.push(args.finalDetails.titleDescription)
+    		session.userData.eventDetail.push(args.finalDetails.textDescription)    	}
+    	else{
+    		session.userData.eventsTitle = []
+    		session.userData.eventDetail = []
+    		session.userData.eventsTitle.push(args.finalDetails.titleDescription)
+    		session.userData.eventDetail.push(args.finalDetails.textDescription)
+    	}
+    	session.endDialog();
+
     }
 ]).triggerAction({
     matches: 'BookEvent',
+    onInterrupted: function (session) {
+        session.send('Hi! Welcome to Schedule it!');
+    }
+});
+
+//Book event found
+bot.dialog('ViewEvents',[
+    function(session){
+    	if(session.userData.eventsTitle){
+    		session.send("Here are your current events!")
+    		var attachments = [];
+			var msg = new builder.Message(session);
+			msg.attachmentLayout(builder.AttachmentLayout.carousel)
+			var i;
+			for (i = 0; i < session.userData.eventsTitle.length; i++) { 
+			    var card = new builder.HeroCard(session)
+                    .title(session.userData.eventsTitle[i])
+                    .text(session.userData.eventDetail[i])
+            attachments.push(card); 
+
+			}
+			msg.attachments(attachments);
+			session.send(msg)
+    	}
+    	else{
+    		session.send("Looks like you don't have any events planned!")
+    	}
+    	session.endDialog();
+
+    }
+]).triggerAction({
+    matches: 'ViewEvents',
     onInterrupted: function (session) {
         session.send('Hi! Welcome to Schedule it!');
     }

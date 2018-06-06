@@ -5,15 +5,6 @@ var lib = new builder.Library('contact');
 // Recipient & Sender details
 lib.dialog('/', [
     function (session) {
-        builder.Prompts.text(session, 'ask_first_name');
-    },
-    function (session, args) {
-        session.dialogData.recipientFirstName = args.response;
-        
-        builder.Prompts.text(session, 'ask_last_name');
-    },
-    function (session, args) {
-        session.dialogData.recipientLastName = args.response;
         session.beginDialog('validators:phonenumber', {
             prompt: session.gettext('ask_recipient_phone_number'),
             retryPrompt: session.gettext('invalid_phone_number'),
@@ -31,8 +22,6 @@ lib.dialog('/', [
     function (session, args) {
         var details = {
             sender: {
-                firstName: session.dialogData.recipientFirstName,
-                lastName: session.dialogData.recipientLastName,
                 phoneNumber: session.dialogData.recipientPhoneNumber,
                 email: session.dialogData.Email
             },

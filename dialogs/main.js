@@ -1,5 +1,7 @@
 const builder = require('botbuilder');
 const lib = new builder.Library('main');
+var sprintf = require('sprintf-js').sprintf,
+    vsprintf = require('sprintf-js').vsprintf
 
 lib.dialog('/',[
     function (session) {
@@ -40,11 +42,24 @@ lib.dialog('/',[
     },
     function(session,args){
       session.conversationData.contactDetails = args.contactDetails;
-      var eventCard = createCard(session)
-  session.send(new builder.Message(session)
-    .addAttachment(eventCard));
+      var titleDescription = session.conversationData.eventDescription
+      var contentDetails = [session.conversationData.startDate,session.conversationData.endDate, session.conversationData.eventAddress,session.conversationData.companyDetails.company]
+      var contentString = "<b>Start Date:</b>%s <br/> <b>End Date:</b> %s<br/> <b>Address of event: </b>%s <br/> <b>Attendees:</b> %s"
+      var endDetails = vsprintf(contentString,contentDetails)
+
+      var eventCard = new builder.HeroCard(session)
+      .title(titleDescription)
+      .text(endDetails)
+
+      session.send(new builder.Message(session)
+        .addAttachment(eventCard));
+
+        var finalDetails = {
+            titleDescription: titleDescription,
+            textDescription: endDetails
+        };
       session.endDialogWithResult({
-      eventCard: eventCard});
+      finalDetails: finalDetails});
     }
 
 ]);
@@ -56,12 +71,7 @@ function createCard(session){
     return eventCard
 
 }
-function AboutEvent(session){
-    session.send('Here are the details of your event!')
-    session.send('about_event', session.conversationData.policyDetails, session.conversationData.dateDetails,session.conversationData.incidentAddress);
-    session.send('claim_details',session.conversationData.driverDetails.driver,session.conversationData.driverDetails.injury,session.conversationData.damageDetails);
-    session.send('contact_details',session.conversationData.firstname,session.conversationData.contactDetails.lastName,session.conversationData.phoneNumber,session.conversationData.email,session.conversationData.contactDetails.bestTime);
-}
+
 //Date, Address, Company, Details, Email, Phone number
 function sendEmail(session, userEmail, agentEmail){
     var subjectMessage = createSubject(session)
