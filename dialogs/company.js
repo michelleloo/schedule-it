@@ -1,7 +1,9 @@
 var builder = require('botbuilder');
 var lib = new builder.Library('company');
 
-var list_company  = ["Myself","Friend","Parents","Other","Work Meeting"]
+
+//Find out the attendees
+var list_company  = ["Myself","Friends","Parents","Work Meeting","Other"]
 lib.dialog('/',[
     function(session) {
         builder.Prompts.choice(session, 'ask_who', list_company,{listStyle: builder.ListStyle.auto});

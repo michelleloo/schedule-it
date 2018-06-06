@@ -1,21 +1,18 @@
 "use strict";
 const builder = require("botbuilder");
 
-// Bot Storage: Here we register the state storage for your bot. 
-// Default store: volatile in-memory store - Only for prototyping!
-// We provide adapters for Azure Table, CosmosDb, SQL Azure, or you can implement your own!
-// For samples and documentation, see: https://github.com/Microsoft/BotBuilder-Azure
+
+//Initialize the statestorage for the bot. 
+//For production can use Azure Table, CosmosDb, SQL Azure or could implement own database 
 var inMemoryStorage = new builder.MemoryBotStorage();
 
-var events = []
 // Create chat bot
 var connector = new builder.ChatConnector({
    appId: null,
    appPassword: null
 });
-
-
 var bot = new builder.UniversalBot(connector);
+
 
 // Set default locale
 bot.set('localizerSettings', {
@@ -23,6 +20,7 @@ bot.set('localizerSettings', {
     defaultLocale: 'en'
 });
 
+//Initialize LUIS setup for NLP
 const intents = new builder.IntentDialog({
     recognizers: [
         new builder.LuisRecognizer(process.env.LUIS_MODEL)
@@ -33,10 +31,9 @@ intents.matches('BookEvent', 'BookEvent');
 intents.matches('ViewEvents', 'ViewEvents');
 intents.matches('DeleteData', 'DeleteData');
 intents.matches('None', 'None');
-
 bot.dialog('/', intents);
 
-//Book event found
+//Book event intent found
 bot.dialog('BookEvent',[
     function(session){
         session.conversationData = "";
@@ -62,7 +59,7 @@ bot.dialog('BookEvent',[
     }
 });
 
-//Book event found
+//View events found
 bot.dialog('ViewEvents',[
     function(session){
     	if(session.userData.eventsTitle.length >= 1){
@@ -94,7 +91,7 @@ bot.dialog('ViewEvents',[
     }
 });
 
-//Book event found
+//User wants to delete data
 bot.dialog('DeleteData',[
     function(session){
         builder.Prompts.choice(session, 'Would you like to delete all the saved events?',"Yes|No",{listStyle: builder.ListStyle.button});
@@ -124,7 +121,7 @@ bot.dialog('DeleteData',[
     }
 });
 
-
+//No intent is found
 bot.dialog('None', [function (session) {
 	if(session.userData.Name){
 		session.endDialog('Hi %s! Welcome to the Schedule-It, I can help you with a variety of requests, try saying something like "Book an event!',session.userData.Name);
@@ -149,11 +146,8 @@ bot.library(require('./dialogs/description').createLibrary());
 bot.library(require('./dialogs/contact').createLibrary());
 
 
-
-
 // Validators
 bot.library(require('./validators').createLibrary());
-
 
 
 module.exports = bot;

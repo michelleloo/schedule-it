@@ -12,7 +12,6 @@ lib.dialog('/', [
         // Ask for address
         args = args || {};
         var promptMessage = args.promptMessage;
-        // session.send("Where will the event occur?")
         session.dialogData.promptMessage = promptMessage;
 
         // Use botbuilder-location dialog for address request

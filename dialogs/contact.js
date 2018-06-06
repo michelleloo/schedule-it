@@ -2,7 +2,7 @@ var builder = require('botbuilder');
 
 var lib = new builder.Library('contact');
 
-// Recipient & Sender details
+//User details
 lib.dialog('/', [
     function (session) {
         session.beginDialog('validators:phonenumber', {

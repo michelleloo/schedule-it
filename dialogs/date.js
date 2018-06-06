@@ -7,7 +7,7 @@ var morningHours = ['6','7','8','9','10','11'];
 var afternoonHours = ['1','2','3','4','5'];
 var eveningHours = ['5','6','7','8','9','10'];
 
-
+//Get the Date and Time of the Event
 lib.dialog('/', [
     function (session) {
       if(session.conversationData.startDate){
@@ -20,9 +20,12 @@ lib.dialog('/', [
     function (session, args) {
         if (args.response) {
             session.dialogData.date = builder.EntityRecognizer.resolveTime([args.response]);
+            //Used to format the time
             var d = session.dialogData.date
             session.dialogData.dateString = d.toDateString();
             var userHours = formatHours(d);
+            //Bot framework assigns morning = 6am, afternoon = 15 and so on, below is used to avoid assuming the time by asking the user again
+            //even if they typed in 6pm 
             switch (userHours){
                 case "0":
                   if(session.conversationData.startDate){
@@ -86,7 +89,6 @@ function(session,args){
 function(session,args) {
   if(args.response == true){
       var eventDate = session.dialogData.dateString + " "+  session.dialogData.timeString;
-    //  var eventDate = session.dialogData.date;
       session.send("Great! Let's proceed")
       session.endDialogWithResult({
       eventDate: eventDate});
@@ -109,8 +111,6 @@ function formatAMPM(date) {
   var strTime = hours + ':' + minutes + ' ' + ampm;
   return strTime;
 }
-
-
 function formatHours(date){
   var hours = date.getHours();
   var minutes = date.getMinutes();

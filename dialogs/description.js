@@ -2,6 +2,7 @@ var builder = require('botbuilder');
 
 var lib = new builder.Library('description');
 
+//Get the description of the event
 lib.dialog('/',[
     function(session){
         builder.Prompts.text(session, 'ask_description');
